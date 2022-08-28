@@ -18,8 +18,19 @@ bool at_write_cmd_play(ATCommands *sender)
     return true; // tells ATCommands to print OK
 }
 
+bool at_write_cmd_volconf(ATCommands *sender)
+{
+    String str1 = sender->next();
+    int volumeConfig = str1.toInt();
+    if(volumeConfig > 0x1E) return false; // 音量の最大値は30
+    SetVolume(volumeConfig);
+    return true; // tells ATCommands to print OK
+}
+
+
 static at_command_t commands[] = {
-    {"+PLAY", NULL, NULL, NULL, at_write_cmd_print},
+    {"+PLAY", NULL, NULL, NULL, at_write_cmd_play},
+    {"+VOLCONF", NULL, NULL, NULL, at_write_cmd_volconf},
 };
 
 void setup() {
